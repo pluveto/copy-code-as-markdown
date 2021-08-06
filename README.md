@@ -8,9 +8,9 @@ Press `F1` or `Ctrl+Shift+P` and execute `Copy selection code as Markdown`.
 
 Your clipboard then get sth like:
 
-```
+````
 *config.yaml*
- ```yaml
+```yaml
 taxonomies:
   category: categories
   tag: tags
@@ -19,10 +19,9 @@ taxonomies:
 
 build:
   useResourceCacheWhen: always
-
- ```
- 
 ```
+````
+
 
 ## Shortcut
 
