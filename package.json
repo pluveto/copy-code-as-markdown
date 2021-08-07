@@ -3,6 +3,8 @@
 	"displayName": "Copy Code as Markdown",
 	"description": "Help you to copy code with markdown fences and filename",
 	"version": "0.0.1",
+	"publisher": "Zhang Zijing (Pluveto)",
+	"icon": "icon.png",
 	"engines": {
 		"vscode": "^1.59.0"
 	},
