@@ -3,7 +3,7 @@
 	"displayName": "Copy Code as Markdown",
 	"description": "Help you to copy code with markdown fences and filename",
 	"version": "0.0.1",
-	"publisher": "Zhang Zijing (Pluveto)",
+	"publisher": "pluveto",
 	"icon": "https://github.com/pluveto/copy-code-as-markdown/blob/4afee7ec353fe571c2168155f4a695775e850c9a/icon.png?raw=true",
 	"engines": {
 		"vscode": "^1.59.0"
