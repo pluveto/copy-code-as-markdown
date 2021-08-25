@@ -3,9 +3,10 @@
 const vscode = require('vscode');
 const path = require('path');
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
-
+function strReplace(template, data) {
+	const pattern = /{\s*(\w+?)\s*}/g; // {property}
+	return template.replace(pattern, (_, token) => data[token] || '');
+}
 /**
  * @param {vscode.ExtensionContext} context
  */
@@ -14,11 +15,11 @@ function activate(context) {
 
 	let cmd = vscode.commands.registerCommand('copy-code-as-markdown.CopySelectionAsMarkdown', function () {
 		var editor = vscode.window.activeTextEditor;
-		if(!Boolean(editor)){
+		if (!Boolean(editor)) {
 			return
 		}
 
-		const getRelFilename = ()=>{
+		const getRelFilename = () => {
 			let workspaces = vscode.workspace.workspaceFolders;
 			// let workspace = vscode.workspace.workspaceFolders.length ? vscode.workspace.workspaceFolders[0] : null;
 			let activeFile = vscode.window.activeTextEditor.document;
@@ -41,8 +42,19 @@ function activate(context) {
 		if (!Boolean(text)) return;
 		const lang = editor.document.languageId
 		const filename = getRelFilename()
-		const lineNumbers = editor.selection.active.line
-		const mdText = `*${filename}* ${lineNumbers}:\n\`\`\`${lang}\n${text}\n\`\`\``
+		const lineNumber = editor.selection.active.line + 1
+
+		const config = vscode.workspace.getConfiguration('copyCodeAsMarkdown')
+		var template = config.get('template')
+		if (!template) {
+			template = `*{filename}* {lineNumber}:\n\`\`\`{lang}\n{text}\n\`\`\``
+		}
+		const mdText = strReplace(template, {
+			filename: filename,
+			lineNumber: lineNumber,
+			lang: lang,
+			text: text,
+		})//`*${filename}* ${lineNumber}:\n\`\`\`${lang}\n${text}\n\`\`\``
 		vscode.env.clipboard.writeText(mdText)
 		vscode.window.showInformationMessage("Markdown copyied!");
 	});
