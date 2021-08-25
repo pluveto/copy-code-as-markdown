@@ -25,7 +25,17 @@ build:
 
 ## Shortcut
 
-Assign any shortcut to it at your will.
+Assign any shortcut to it at your will. Example:
+
+*c:\Users\<USERNAME>\AppData\Roaming\Code\User\keybindings.json*
+
+```jsonc
+    {
+        "key": "ctrl+shift+c",
+        "command": "copy-code-as-markdown.CopySelectionAsMarkdown",
+        "when": "editorTextFocus"
+    },
+```
 
 ## Custom template
 
