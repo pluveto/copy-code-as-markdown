@@ -2,7 +2,7 @@
   "name": "copy-code-as-markdown",
 	"displayName": "Copy Code as Markdown",
 	"description": "Help you to copy code with markdown fences and filename",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"publisher": "pluveto",
 	"repository": {"type":"Github", "url": "https://github.com/pluveto/copy-code-as-markdown"},
 	"icon": "icon.png",
