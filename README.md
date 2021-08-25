@@ -26,3 +26,20 @@ build:
 ## Shortcut
 
 Assign any shortcut to it at your will.
+
+## Custom template
+
+Setting node is `copyCodeAsMarkdown.template`. Available vars:
+
++ `{filename}`
++ `{lineNumber}`
++ `{lang}`
++ `{text}`
+
+Example:
+
+```
+{
+    "copyCodeAsMarkdown.template": "```{lang}\n{text}\n```"
+}
+```
