@@ -23,7 +23,7 @@
 				"copyCodeAsMarkdown.template":{
 					"type": "string",
 					"default": "*{filename}* {lineNumber}:\n```{lang}\n{text}\n```",
-					"markdownDescription": "Template of the copied text."
+					"markdownDescription": "Available vars:\n\n+ `{filename}`\n+ `{lineNumber}`\n+ `{lang}`\n+ `{text}`"
 				}
 			}
 		},
