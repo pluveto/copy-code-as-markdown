@@ -56,7 +56,7 @@ function activate(context) {
 			text: text,
 		})//`*${filename}* ${lineNumber}:\n\`\`\`${lang}\n${text}\n\`\`\``
 		vscode.env.clipboard.writeText(mdText)
-		vscode.window.showInformationMessage("Markdown copyied!");
+		vscode.window.showInformationMessage("Markdown copied!");
 	});
 
 
