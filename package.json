@@ -23,6 +23,14 @@
 				"copyCodeAsMarkdown.template":{
 					"type": "string",
 					"default": "*{filename}* {lineNumber}:\n```{lang}\n{text}\n```",
+					"enum": [
+						"```{lang}\n{text}\n```",
+						"*{filename}* {lineNumber}:\n```{lang}\n{text}\n```"
+					],
+					"markdownEnumDescriptions": [
+						"only the markdown block",
+						"Filename, Line and markdown block"
+					],
 					"markdownDescription": "Available vars:\n\n+ `{filename}`\n+ `{lineNumber}`\n+ `{lang}`\n+ `{text}`"
 				}
 			}
