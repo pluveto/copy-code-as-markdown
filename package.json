@@ -2,7 +2,7 @@
   "name": "copy-code-as-markdown",
 	"displayName": "Copy Code as Markdown",
 	"description": "Help you to copy code with markdown fences and filename",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"publisher": "pluveto",
 	"repository": {"type":"Github", "url": "https://github.com/pluveto/copy-code-as-markdown"},
 	"icon": "icon.png",
@@ -17,6 +17,16 @@
 	],
 	"main": "./extension.js",
 	"contributes": {
+		"configuration":{
+			"title": "Copy Code As Markdown",
+			"properties": {
+				"copyCodeAsMarkdown.template":{
+					"type": "string",
+					"default": "*{filename}* {lineNumber}:\n```{lang}\n{text}\n```",
+					"markdownDescription": "Template of the copied text."
+				}
+			}
+		},
 		"commands": [{
             "command": "copy-code-as-markdown.CopySelectionAsMarkdown",
             "title": "Copy selection code as Markdown"
