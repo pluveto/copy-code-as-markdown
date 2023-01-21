@@ -8,6 +8,7 @@
 		"type": "Github",
 		"url": "https://github.com/pluveto/copy-code-as-markdown"
 	},
+	"license": "MIT",
 	"icon": "icon.png",
 	"engines": {
 		"vscode": "^1.59.0"
