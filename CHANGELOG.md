@@ -1,10 +1,14 @@
 # Change Log
 
-All notable changes to the "copy-code-as-markdown" extension will be documented in this file.
+## [1.0.0] - 2023-01-21
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+### Added
 
-## [Unreleased]
+- Support for builtin templates
+- Support for switch between templates
+- More special fields in template: `{lineNumberEnd}`, `{colNumberEnd}`, `colNumber`
 
-- Initial release
-- settings added
+### Changed
+
+- Command add prefix `copyCodeAsMarkdown:`
+- Field `filename` changed to `fileName`
