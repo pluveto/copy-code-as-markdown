@@ -4,11 +4,13 @@ It helps you to copy code with markdown fences and filename.
 
 ## Usage
 
-Press `F1` or `Ctrl+Shift+P` and execute `Copy selection code as Markdown`.
+### Basic
+
+Execute command `copyCodeAsMarkdown: Copy selection code as Markdown`.
 
 Your clipboard then get sth like:
 
-````
+````markdown
 *config.yaml*
 ```yaml
 taxonomies:
@@ -22,12 +24,28 @@ build:
 ```
 ````
 
+### Switch between teplates
+
+Execute command `copyCodeAsMarkdown: copyCodeAsMarkdown: Switch using template`.
+
+Here are some of the builtin templates:
+
+```jsonc
+{
+  "default": "*{filename}* {lineNumber}:\n```{lang}\n{text}\n```",
+  "lineRange": "*{filename}* {lineNumber} - {lineNumberEnd}:\n```{lang}\n{text}\n```",
+  "onlyCode": "```{lang}\n{text}\n```",
+  "onlyPosition": "{filename}:{lineNumber}:{colNumber}"
+}
+```
 
 ## Shortcut
 
-Assign any shortcut to it at your will. Example:
+This extension has no default shortcut. You can set it by yourself.
 
-*c:\Users\<USERNAME>\AppData\Roaming\Code\User\keybindings.json*
+Edit your keybinding setting via UI,
+
+or edit config file for example *c:\Users\<USERNAME>\AppData\Roaming\Code\User\keybindings.json*
 
 ```jsonc
     {
@@ -43,12 +61,15 @@ Setting node is `copyCodeAsMarkdown.template`. Available vars:
 
 + `{filename}`
 + `{lineNumber}`
++ `{lineNumberEnd}`
++ `{colNumber}`
++ `{colNumberEnd}`
 + `{lang}`
 + `{text}`
 
 Example:
 
-```
+```jsonc
 {
     "copyCodeAsMarkdown.template": "```{lang}\n{text}\n```"
 }
