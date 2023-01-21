@@ -47,7 +47,7 @@ function activate(context) {
 
 		template = templates[usingTemplateName] || template
 
-		const mdText = util.renderStrMap(template, renderMap)//`*${fileName}* ${lineNumber}:\n\`\`\`${lang}\n${text}\n\`\`\``
+		const mdText = util.renderStrMap(template, renderMap, false)//`*${fileName}* ${lineNumber}:\n\`\`\`${lang}\n${text}\n\`\`\``
 		vscode.env.clipboard.writeText(mdText)
 		vscode.window.showInformationMessage("Markdown copied!")
 	});
