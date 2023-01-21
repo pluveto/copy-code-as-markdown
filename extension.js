@@ -1,66 +1,79 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
-const path = require('path');
+const util = require('./util')
 
-function strReplace(template, data) {
-	const pattern = /{\s*(\w+?)\s*}/g; // {property}
-	return template.replace(pattern, (_, token) => data[token] || '');
-}
+const builtinTemplate = `*{fileName}* {lineNumber}:\n\`\`\`{lang}\n{text}\n\`\`\``;
+
+
 /**
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
 
 
-	let cmd = vscode.commands.registerCommand('copy-code-as-markdown.CopySelectionAsMarkdown', function () {
-		var editor = vscode.window.activeTextEditor;
+	let genRenderMap = () => {
+		let editor = vscode.window.activeTextEditor;
 		if (!Boolean(editor)) {
-			return
+			return null;
 		}
+		let selText = editor.document.getText(editor.selection);
+		const dataMap = {
+			fileName: util.getRelFilenameOfActiveFile() || "Untitled",
+			lineNumber: editor.selection.start.line + 1,
+			lineNumberEnd: editor.selection.end.line + 1,
+			colNumber: editor.selection.start.character + 1,
+			colNumberEnd: editor.selection.end.character + 1,
+			lang: editor.document.languageId,
+			text: selText,
+		};
 
-		const getRelFilename = () => {
-			let workspaces = vscode.workspace.workspaceFolders;
-			// let workspace = vscode.workspace.workspaceFolders.length ? vscode.workspace.workspaceFolders[0] : null;
-			let activeFile = vscode.window.activeTextEditor.document;
-			let absoluteFilePath = activeFile.uri.fsPath
-			// let activeWorkspace = workspace;
+		return dataMap;
+	}
 
-			let relativeFilePath = absoluteFilePath;
-			for (let workspace of workspaces) {
-				if (absoluteFilePath.replace(workspace.uri.fsPath, '') !== absoluteFilePath) {
-					// activeWorkspace = workspace;
-					relativeFilePath = absoluteFilePath.replace(workspace.uri.fsPath, '').substr(path.sep.length);
-					break;
-				}
-			}
-			return relativeFilePath
+	let cmdCopy = vscode.commands.registerCommand('copy-code-as-markdown.CopySelectionAsMarkdown', function () {
+
+		const renderMap = genRenderMap();
+		if (!renderMap) {
+			return;
 		}
-
-		var selection = editor.selection;
-		var text = editor.document.getText(selection);
-		if (!Boolean(text)) return;
-		const lang = editor.document.languageId
-		const filename = getRelFilename()
-		const lineNumber = editor.selection.active.line + 1
-
 		const config = vscode.workspace.getConfiguration('copyCodeAsMarkdown')
-		var template = config.get('template')
+		let template = config.get('template') || config.get('defaultTemplate')
 		if (!template) {
-			template = `*{filename}* {lineNumber}:\n\`\`\`{lang}\n{text}\n\`\`\``
+			template = builtinTemplate
 		}
-		const mdText = strReplace(template, {
-			filename: filename,
-			lineNumber: lineNumber,
-			lang: lang,
-			text: text,
-		})//`*${filename}* ${lineNumber}:\n\`\`\`${lang}\n${text}\n\`\`\``
+		let templates = config.get('templates')
+		let usingTemplateName = config.get('usingTemplateName') || 'default'
+
+		template = templates[usingTemplateName] || template
+
+		const mdText = util.renderStrMap(template, renderMap)//`*${fileName}* ${lineNumber}:\n\`\`\`${lang}\n${text}\n\`\`\``
 		vscode.env.clipboard.writeText(mdText)
-		vscode.window.showInformationMessage("Markdown copied!");
+		vscode.window.showInformationMessage("Markdown copied!")
 	});
 
+	let cmdSwitchUsingTemplate = vscode.commands.registerCommand('copy-code-as-markdown.SwitchUsingTemplate', function () {
+		const config = vscode.workspace.getConfiguration('copyCodeAsMarkdown')
+		let templates = config.get('templates')
+		let selectedName = config.get('usingTemplateName') || 'default'
+		let templateNames = Object.keys(templates)
 
-	context.subscriptions.push(cmd);
+		// Show a quick pick
+		const quickPick = vscode.window.createQuickPick();
+		quickPick.items = templateNames.map(name => ({ label: name, picked: name === selectedName }));
+
+		quickPick.onDidChangeSelection(selection => {
+			config.update('usingTemplateName', selection[0].label, true)
+			quickPick.hide();
+		});
+
+		quickPick.onDidHide(() => quickPick.dispose());
+
+		quickPick.show();
+	});
+
+	context.subscriptions.push(cmdCopy);
+	context.subscriptions.push(cmdSwitchUsingTemplate);
 }
 
 // this method is called when your extension is deactivated
