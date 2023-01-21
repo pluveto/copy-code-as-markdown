@@ -14,17 +14,14 @@ function renderStrMap(template, dataMap, caseSensitive = true) {
 }
 
 const getRelFilenameOfActiveFile = () => {
-    let workspaces = vscode.workspace.getWorkspaceFolder(vscode.window.activeTextEditor.document.uri);
+    let ws = vscode.workspace.getWorkspaceFolder(vscode.window.activeTextEditor.document.uri);
     let activeFile = vscode.window.activeTextEditor.document;
     let absoluteFilePath = activeFile.uri.fsPath
 
-    if (!workspaces) return absoluteFilePath;
+    if (!ws) return absoluteFilePath;
     let relativeFilePath = absoluteFilePath;
-    for (let workspace of workspaces) {
-        if (absoluteFilePath.replace(workspace.uri.fsPath, '') !== absoluteFilePath) {
-            relativeFilePath = absoluteFilePath.replace(workspace.uri.fsPath, '').substr(path.sep.length);
-            break;
-        }
+    if (absoluteFilePath.replace(ws.uri.fsPath, '') !== absoluteFilePath) {
+        relativeFilePath = absoluteFilePath.replace(ws.uri.fsPath, '').substr(path.sep.length);
     }
     return relativeFilePath
 }
