@@ -1,9 +1,12 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
-const util = require('./util')
+const util = require('./util');
+const outline = require('./outline');
 
 const builtinTemplate = `*{fileName}* {lineNumber}:\n\`\`\`{lang}\n{text}\n\`\`\``;
+const builtinPrefix = '> &squ; ';
+const builtinDelimiter = ' &raquo; ';
 
 
 /**
@@ -12,11 +15,7 @@ const builtinTemplate = `*{fileName}* {lineNumber}:\n\`\`\`{lang}\n{text}\n\`\`\
 function activate(context) {
 
 
-	let genRenderMap = () => {
-		let editor = vscode.window.activeTextEditor;
-		if (!Boolean(editor)) {
-			return null;
-		}
+	let genRenderMap = (editor) => {
 		let selText = editor.document.getText(editor.selection);
 		const dataMap = {
 			fileName: util.getRelFilenameOfActiveFile() || "Untitled",
@@ -31,13 +30,39 @@ function activate(context) {
 		return dataMap;
 	}
 
-	let cmdCopy = vscode.commands.registerCommand('copy-code-as-markdown.CopySelectionAsMarkdown', function () {
+	let getOutlinePath = async (editor, options) => {
+		const outlineItems = await vscode.commands.executeCommand('vscode.executeDocumentSymbolProvider', editor.document.uri);
+        if (!outlineItems) return null;
+        const outlinePath = outline.makeOutlineChainFromPos(outlineItems, editor.selection.active).map(({ name }) => name);
+        if (outlinePath.length === 0) {
+            void vscode.window.showInformationMessage('Outline path is empty');
+            return null;
+        }
+		return options.prefix + outlinePath.join(options.delimiter);
+	}
 
-		const renderMap = genRenderMap();
+	let cmdCopy = vscode.commands.registerCommand('copy-code-as-markdown.CopySelectionAsMarkdown', async function () {
+		
+		const editor = vscode.window.activeTextEditor;
+		if (!Boolean(editor)) {
+			return;
+		}
+
+		const config = vscode.workspace.getConfiguration('copyCodeAsMarkdown')
+
+		const renderMap = genRenderMap(editor);
 		if (!renderMap) {
 			return;
 		}
-		const config = vscode.workspace.getConfiguration('copyCodeAsMarkdown')
+
+		const prefix = config.get('outlinePrefix') || builtinPrefix;
+		const delimiter = config.get('outlineDelimiter') || builtinDelimiter;
+
+		const outlinePath = await getOutlinePath(editor, {prefix, delimiter});
+		if (outlinePath) {
+			renderMap.outlinePath = outlinePath;
+		}
+
 		let template = config.get('template') || config.get('defaultTemplate')
 		if (!template) {
 			template = builtinTemplate
