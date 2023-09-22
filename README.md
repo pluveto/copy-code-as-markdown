@@ -35,7 +35,8 @@ Here are some of the builtin templates:
   "default": "*{filename}* {lineNumber}:\n```{lang}\n{text}\n```",
   "lineRange": "*{filename}* {lineNumber} - {lineNumberEnd}:\n```{lang}\n{text}\n```",
   "onlyCode": "```{lang}\n{text}\n```",
-  "onlyPosition": "{filename}:{lineNumber}:{colNumber}"
+  "onlyPosition": "{filename}:{lineNumber}:{colNumber}",
+  "withOutline": "[{filename}#L{lineNumber}](/{filename}#L{lineNumber})\n>{outlinePath}\n```{lang}\n{text}\n```"
 }
 ```
 
@@ -66,6 +67,7 @@ Setting node is `copyCodeAsMarkdown.template`. Available vars:
 + `{colNumberEnd}`
 + `{lang}`
 + `{text}`
++ `{outlinePath}`
 
 Example:
 
@@ -74,3 +76,7 @@ Example:
     "copyCodeAsMarkdown.template": "```{lang}\n{text}\n```"
 }
 ```
+
+## Outline path delimiter
+
+Setting node is `copyCodeAsMarkdown.delimiter`. Default value is `" &raquo; "`
