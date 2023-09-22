@@ -48,11 +48,15 @@
 						"lineRange": "*{filename}* {lineNumber} - {lineNumberEnd}:\n```{lang}\n{text}\n```",
 						"onlyCode": "```{lang}\n{text}\n```",
 						"onlyPosition": "{filename}:{lineNumber}:{colNumber}",
-						"withOutline": "[{filename}#L{lineNumber}](/{filename}#L{lineNumber})\n>{outlinePath}\n```{lang}\n{text}\n```"
+						"withOutline": "[{filename}#L{lineNumber}](/{filename}#L{lineNumber})\n{outlinePath}\n\n```{lang}\n{text}\n```"
 					},
 					"markdownDescription": "Create your own template. Key is the template name, value is the template. Available vars:\n\n+ `{fileName}`\n+ `{lineNumber}`\n+ `{lineNumberEnd}`\n+ `{lang}`\n+ `{text}\n+ `{outlinePath}`"
 				},
-				"copyCodeAsMarkdown.delimiter": {
+				"copyCodeAsMarkdown.outlinePrefix": {
+					"type": "string",
+					"default": "> &squ; "
+				},
+				"copyCodeAsMarkdown.outlineDelimiter": {
 					"type": "string",
 					"default": " &raquo; "
 				}

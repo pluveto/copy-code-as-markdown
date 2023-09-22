@@ -77,6 +77,10 @@ Example:
 }
 ```
 
+## Outline path prefix
+
+Setting node is `copyCodeAsMarkdown.outlinePrefix`. Default value is `"> &squ; "`
+
 ## Outline path delimiter
 
-Setting node is `copyCodeAsMarkdown.delimiter`. Default value is `" &raquo; "`
+Setting node is `copyCodeAsMarkdown.outlineDelimiter`. Default value is `" &raquo; "`

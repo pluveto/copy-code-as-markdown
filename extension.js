@@ -5,6 +5,7 @@ const util = require('./util');
 const outline = require('./outline');
 
 const builtinTemplate = `*{fileName}* {lineNumber}:\n\`\`\`{lang}\n{text}\n\`\`\``;
+const builtinPrefix = '> &squ; ';
 const builtinDelimiter = ' &raquo; ';
 
 
@@ -29,7 +30,7 @@ function activate(context) {
 		return dataMap;
 	}
 
-	let getOutlinePath = async (editor, delimiter) => {
+	let getOutlinePath = async (editor, options) => {
 		const outlineItems = await vscode.commands.executeCommand('vscode.executeDocumentSymbolProvider', editor.document.uri);
         if (!outlineItems) return null;
         const outlinePath = outline.makeOutlineChainFromPos(outlineItems, editor.selection.active).map(({ name }) => name);
@@ -37,7 +38,7 @@ function activate(context) {
             void vscode.window.showInformationMessage('Outline path is empty');
             return null;
         }
-		return outlinePath.join(delimiter);
+		return options.prefix + outlinePath.join(options.delimiter);
 	}
 
 	let cmdCopy = vscode.commands.registerCommand('copy-code-as-markdown.CopySelectionAsMarkdown', async function () {
@@ -54,9 +55,10 @@ function activate(context) {
 			return;
 		}
 
-		const delimiter = config.get('delimiter') || builtinDelimiter;
+		const prefix = config.get('outlinePrefix') || builtinPrefix;
+		const delimiter = config.get('outlineDelimiter') || builtinDelimiter;
 
-		const outlinePath = await getOutlinePath(editor, delimiter);
+		const outlinePath = await getOutlinePath(editor, {prefix, delimiter});
 		if (outlinePath) {
 			renderMap.outlinePath = outlinePath;
 		}
